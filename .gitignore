@@ -1,0 +1,6 @@
+# 本机配置与凭据：不要提交
+# config.example.yaml 是模板（会被提交），config.yaml / secrets.yaml 是本机私有的
+config.yaml
+secrets.yaml
+secrets.local.yaml
+*.secrets.yaml

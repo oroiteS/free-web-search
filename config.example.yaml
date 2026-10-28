@@ -1,0 +1,78 @@
+# free-web-search 配置文件
+#
+# 这个文件一旦存在且包含有效键值，AI 就视为「已配置」，后续不再向你提问，
+# 直接按这里的选择工作。想重新配置就改这里（或删掉文件让它重新问一遍）。
+#
+# 格式：极简 YAML（key: value）。也可以写成 TOML（key = value），解析器两种都认。
+
+# 用哪个运行时执行搜索：python | node
+# 影响 AI 调用哪个脚本（search.py 还是 search.mjs）
+runtime: python
+
+# 代理设置：国内访问 DuckDuckGo / SearXNG 通常需要开
+proxy:
+  enabled: false
+  url: http://127.0.0.1:7890
+
+# 默认搜索引擎。
+#   auto  = 智能路由（推荐）：按查询语言选引擎，并自动跳过「需要 key 但没配」的引擎
+#   其余  = 指定某个引擎 id，失败仍会自动回退到其它引擎
+# 免 key 可用：bing ddg ddg-lite searxng anysearch exa tavily keenable firecrawl parallel
+# 需 key：perplexity serpbase deepseek you baidu kimi aliyun doubao
+engine: auto
+
+# 手动禁用不想用的引擎（auto / 回退链 / multi 都不会再碰它们）
+# 两种写法都行：列表，或逗号分隔字符串
+disabledEngines: []
+# disabledEngines:
+#   - ddg
+#   - ddg-lite
+#   - searxng
+
+# 默认返回条数（1-20）
+maxResults: 5
+
+# 结果本地化语言：zh en ru ja de fr es ko
+lang: zh
+
+# 安全搜索（仅 Bing / DuckDuckGo 生效）：off | moderate | strict
+safeSearch: off
+
+# 整条回退链的总超时预算（秒）
+timeout: 30
+
+# ── 搜索 / 抓取优先级（可选）──────────────────────────────────
+# 用简单数字给引擎排序：数字越小越靠前（1 = 最优先）。
+# 未列出的引擎按内置默认顺序排在所有已列出引擎之后，不会插队。
+#
+# searchPriority —— 影响 auto 智能路由、回退链顺序和 multi 的选源。
+#   设置后 auto 不再按查询语言加权，完全按这里的数字走；
+#   带 -t 时间过滤时，你列出的引擎里「支持时间过滤的」仍会前置。
+# fetchPriority —— 决定 --fetch 不指定 --fetch-engine 时的默认抓取后端
+#   （自动跳过没配 key 的；抓取不做跨后端自动回退）。
+#
+# 数字映射写法：
+# searchPriority:
+#   deepseek: 1
+#   bing: 2
+# fetchPriority:
+#   firecrawl: 1
+#   deepseek: 2
+#
+# 列表写法（顺序即优先级，等价于 1,2,3…）：
+# searchPriority: [deepseek, bing, exa]
+#
+# 写错的引擎名 / 非数字会在 --config-status 的 warnings 里提示。
+
+# ── API key 放在哪？────────────────────────────────────────────
+# 推荐单独放 secrets.yaml（与这个文件同级），写法见 secrets.example.yaml：
+#   EXA_API_KEY: "sk-..."
+#   TAVILY_API_KEY: "tvly-..."
+# 用 --init-secrets 可生成模板（自动设为 600 权限）。
+#
+# 也可以直接写在本文件下面（不推荐：本文件可能被提交或分享）：
+# keys:
+#   exa: "sk-..."
+#   baidu: "..."
+#
+# 优先级：secrets.yaml > 本文件的 keys: 段 > 环境变量
