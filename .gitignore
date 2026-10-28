@@ -4,3 +4,7 @@ config.yaml
 secrets.yaml
 secrets.local.yaml
 *.secrets.yaml
+
+# Python 缓存（skill 目录可能被拷进其它仓库，自带规则更稳）
+__pycache__/
+*.pyc
